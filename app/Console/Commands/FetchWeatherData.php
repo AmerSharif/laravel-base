@@ -3,6 +3,8 @@
 namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
+use GuzzleHttp\Client;
+use App\Models\Location as LocationModel;
 
 class FetchWeatherData extends Command
 {
@@ -41,7 +43,7 @@ class FetchWeatherData extends Command
         $params = [
             'headers' => ['Content-Type' =>  'application/json'],
         ];
-        $locations = Location::all();
+        $locations = LocationModel::all();
         foreach($locations as $location){
             $url = "https://api.met.no/weatherapi/locationforecast/2.0/compact?lat=".$location->latitude."&lon=".$location->longitude;
 
