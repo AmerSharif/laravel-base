@@ -15,6 +15,11 @@ class CreateWeatherDataTable extends Migration
     {
         Schema::create('weather_data', function (Blueprint $table) {
             $table->id();
+            $table->integer('location_id');
+            $table->dateTime('period_start');
+            $table->tinyInteger('weather_type_id');
+            $table->double('temperature');
+            $table->double('precipitation');
             $table->timestamps();
         });
     }

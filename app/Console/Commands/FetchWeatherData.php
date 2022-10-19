@@ -4,7 +4,10 @@ namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
 use GuzzleHttp\Client;
-use App\Models\Location as LocationModel;
+use App\Models\Location;
+use App\Models\WeatherData;
+use App\Models\WeatherType;
+use Carbon\Carbon;
 
 class FetchWeatherData extends Command
 {
@@ -41,16 +44,20 @@ class FetchWeatherData extends Command
     {
         $client = new Client();
         $params = [
-            'headers' => ['Content-Type' =>  'application/json'],
+            'headers' => [
+                'Content-Type' =>  'application/json',
+                'User-Agent'   => 'GetLocationWeatherData/1.0',
+                'From'         => 'mr.amersharif@gmail.com',
+            ],
         ];
-        $locations = LocationModel::all();
+        $locations = Location::all();
+        
         foreach($locations as $location){
             $url = "https://api.met.no/weatherapi/locationforecast/2.0/compact?lat=".$location->latitude."&lon=".$location->longitude;
 
             $data = $client->request('GET', $url, $params);
             $data = json_decode($data->getBody());
             $timeseries = $data->properties->timeseries;
-
             $period_start =     Carbon::parse($timeseries[0]->time);
             $precipitation =    intval(round($timeseries[0]->data->next_6_hours->details->precipitation_amount));
             $icon =             $timeseries[0]->data->next_6_hours->summary->symbol_code;
