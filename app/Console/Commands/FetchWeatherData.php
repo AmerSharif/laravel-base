@@ -53,9 +53,14 @@ class FetchWeatherData extends Command
         $locations = Location::all();
         
         foreach($locations as $location){
-            $url = "https://api.met.no/weatherapi/locationforecast/2.0/compact?lat=".$location->latitude."&lon=".$location->longitude;
-
-            $data = $client->request('GET', $url, $params);
+            try {
+                $url = "https://api.met.no/weatherapi/locationforecast/2.0/compact?lat=".$location->latitude."&lon=".$location->longitude;
+                $data = $client->request('GET', $url, $params);
+            } catch (RequestException $ex) {
+                // Todo: check if we should use something else. Does abort stop the loop?
+                abort(404, 'Weather data not found');
+            }
+            
             $data = json_decode($data->getBody());
             $timeseries = $data->properties->timeseries;
             $period_start =     Carbon::parse($timeseries[0]->time);
@@ -72,7 +77,7 @@ class FetchWeatherData extends Command
             }
 
             $temperature = intval(round(array_sum($temperature) / count($temperature)));
-            
+            break;
             WeatherData::create([
                 'location_id' => $location->id,
                 'period_start' => $period_start,
