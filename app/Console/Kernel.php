@@ -25,6 +25,9 @@ class Kernel extends ConsoleKernel
     protected function schedule(Schedule $schedule)
     {
         // $schedule->command('inspire')->hourly();
+        // Todo: consider use of ->withoutOverlapping() and ->onOneServer()
+        // Todo 2: check possibility for defining when the jo should start
+        $schedule->command('yr:fetch')->everySixHours()->runInBackground();
     }
 
     /**

@@ -77,7 +77,7 @@ class FetchWeatherData extends Command
             }
 
             $temperature = intval(round(array_sum($temperature) / count($temperature)));
-            break;
+            
             WeatherData::create([
                 'location_id' => $location->id,
                 'period_start' => $period_start,
