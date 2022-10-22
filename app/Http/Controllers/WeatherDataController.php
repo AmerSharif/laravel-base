@@ -1,10 +1,12 @@
 <?php
 
-namespace App\Http\Controllers\API;
+// namespace App\Http\Controllers\API;
+namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use App\Models\WeatherData;
 use Illuminate\Http\Request;
+use App\Models\Location;
 
 class WeatherDataController extends Controller
 {
@@ -83,7 +85,7 @@ class WeatherDataController extends Controller
      */
     public function getAllLocationsWeather()
     {
-        $locations = Locations::all();
+        $locations = Location::all();
 
         return response()->json( $locations );
     }
@@ -102,16 +104,13 @@ class WeatherDataController extends Controller
      */
     public function getLocationWeather($latitude, $longitude)
     {
-        $locationData = DB::table('locations')
-                        ->join('weather_data', 'locations.id', '=', 'weather_data.location_id')
+        $locationData = Location::join('weather_data', 'locations.id', '=', 'weather_data.location_id')
                         ->select(   'locations.name', 
                                     'weather_data.weather_type_id', 
                                     'weather_data.temperature', 
                                     'weather_data.precipitation')
-                        ->where([
-                            'latitude', '=', $latitude,
-                            'longitude', '=', $longitude
-                            ])
+                        ->where('locations.latitude', '=', $latitude)
+                        ->where('locations.longitude', '=', $longitude)
                         ->get();
         return response()->json( $locationData );
     }
