@@ -76,6 +76,22 @@ class WeatherDataController extends Controller
 
     /**
      * |-------------------------------------------------------------------------------
+     * | Get all locations
+     * | TODO: Move this to it's own contoller
+     * |-------------------------------------------------------------------------------
+     * | URL:            /api/v1/locations
+     * | Method:         GET
+     * | Description:    Gets locationinfo for all stations in database
+     */
+    public function getAllLocations()
+    {
+        $locations = Location::all();
+
+        return response()->json( $locations );
+    }
+
+    /**
+     * |-------------------------------------------------------------------------------
      * | Get weather for all locations
      * |-------------------------------------------------------------------------------
      * | URL:            /api/v1/locationweather
@@ -84,9 +100,13 @@ class WeatherDataController extends Controller
      */
     public function getAllLocationsWeather()
     {
-        $locations = Location::all();
-
-        return response()->json( $locations );
+        $locationData = Location::join('weather_data', 'locations.id', '=', 'weather_data.location_id')
+                        ->select(   'locations.name', 
+                                    'weather_data.weather_type_id', 
+                                    'weather_data.temperature', 
+                                    'weather_data.precipitation')
+                        ->get();
+        return response()->json( $locationData );
     }
 
     /**

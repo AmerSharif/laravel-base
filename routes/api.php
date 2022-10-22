@@ -18,6 +18,15 @@ Route::get('/user', function( Request $request ){
 });
 
 /**
+ * | TODO:           change to it's own controller when ready
+ * | URL:            /api/locations
+ * | Controller:     API\WeatherDataController@getAllLocations
+ * | Method:         GET
+ * | Description:    Gets all locations
+ */
+Route::get('/locations', 'App\Http\Controllers\WeatherDataController@getAllLocations');
+
+/**
  * | URL:            /api/locationweather
  * | Controller:     API\WeatherDataController@getAllLocationsWeather
  * | Method:         GET
