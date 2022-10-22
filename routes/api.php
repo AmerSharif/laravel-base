@@ -28,22 +28,22 @@ Route::group(['prefix' => 'v1', 'middleware' => 'auth:api'], function(){
     | Get All 
     |-------------------------------------------------------------------------------
     | URL:            /api/v1/LocationWeather
-    | Controller:     API\LocationWeatherController@getLocationWeather
+    | Controller:     API\WeatherDataController@getAllLocationsWeather
     | Method:         GET
     | Description:    Gets weather for all locations
     */
-    Route::get('/locationweather', 'API\LocationWeatherController@getLocationWeather');
+    Route::get('/locationweather', 'API\WeatherDataController@getAllLocationsWeather');
 
     /*
     |-------------------------------------------------------------------------------
     | Get weather for an individual location
     |-------------------------------------------------------------------------------
-    | URL:            /api/v1/LocationWeather/{id}
-    | Controller:     API\LocationWeatherController@getLocationWeather
+    | URL:            /api/v1/LocationWeather/{latitude}/{longitude}
+    | Controller:     API\WeatherDataController@getLocationWeather
     | Method:         GET
     | Description:    Gets weather for an individual location
     */
-    Route::get('/locationweather/{id}', 'API\LocationWeatherController@getCafe');
+    Route::get('/locationweather/{latitude}/{longitude}', 'API\WeatherDataController@getLocationWeather');
 });
 
 Route::fallback(function(){

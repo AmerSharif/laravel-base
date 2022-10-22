@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\API;
 
+use App\Http\Controllers\Controller;
 use App\Models\WeatherData;
 use Illuminate\Http\Request;
 
@@ -70,6 +71,49 @@ class WeatherDataController extends Controller
     public function update(Request $request, WeatherData $weatherData)
     {
         //
+    }
+
+    /**
+     * |-------------------------------------------------------------------------------
+     * | Get weather for all locations
+     * |-------------------------------------------------------------------------------
+     * | URL:            /api/v1/locationweather
+     * | Method:         GET
+     * | Description:    Gets weather data for all the locations in database
+     */
+    public function getAllLocationsWeather()
+    {
+        $locations = Locations::all();
+
+        return response()->json( $locations );
+    }
+
+    /**
+     * |-------------------------------------------------------------------------------
+     * | Get weather data for an invidual location
+     * |-------------------------------------------------------------------------------
+     * | URL:            /api/v1/locationweather/{latitude}/{longitude}
+     * | Method:         GET
+     * | Description:    Gets weather data for an invidual location
+     * | Parameters:
+     * |   $latitude   -> latitude position for location
+     * |   $longitude  -> longitude position for location
+     * 
+     */
+    public function getLocationWeather($latitude, $longitude)
+    {
+        $locationData = DB::table('locations')
+                        ->join('weather_data', 'locations.id', '=', 'weather_data.location_id')
+                        ->select(   'locations.name', 
+                                    'weather_data.weather_type_id', 
+                                    'weather_data.temperature', 
+                                    'weather_data.precipitation')
+                        ->where([
+                            'latitude', '=', $latitude,
+                            'longitude', '=', $longitude
+                            ])
+                        ->get();
+        return response()->json( $locationData );
     }
 
     /**
