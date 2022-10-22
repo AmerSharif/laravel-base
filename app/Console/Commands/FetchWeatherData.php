@@ -43,11 +43,13 @@ class FetchWeatherData extends Command
     public function handle()
     {
         $client = new Client();
+
+        // Todo: Check which headers needed to fetch data from Yr. Change User-Agent value and add From value
         $params = [
             'headers' => [
                 'Content-Type' =>  'application/json',
                 'User-Agent'   => 'GetLocationWeatherData/1.0',
-                'From'         => 'mr.amersharif@gmail.com',
+                'From'         => '',
             ],
         ];
         $locations = Location::all();
